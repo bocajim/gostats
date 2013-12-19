@@ -11,28 +11,29 @@ var cpuAverage int
 func CalcAverages() {
 
 	cpuRing = ring.New(12)
-	cpuAverage=Cpu()
+	cpuAverage = Cpu()
 	for i := 0; i < 12; i++ {
-	    cpuRing.Value=cpuAverage
-	    cpuRing=cpuRing.Next()
+		cpuRing.Value = cpuAverage
+		cpuRing = cpuRing.Next()
 	}
 
 	go func() {
 		for {
 			select {
-				case <- time.After(time.Second*5):
-					//calc CPU
-					cpuRing.Value=Cpu()
-					cpuRing=cpuRing.Next()
-					tempAvgSum=0
-					cpuRing.Do(ringAvg)
-					cpuAverage = tempAvgSum/12
+			case <-time.After(time.Second * 5):
+				//calc CPU
+				cpuRing.Value = Cpu()
+				cpuRing = cpuRing.Next()
+				tempAvgSum = 0
+				cpuRing.Do(ringAvg)
+				cpuAverage = tempAvgSum / 12
 			}
 		}
 	}()
 }
 
 var tempAvgSum int
+
 func ringAvg(i interface{}) {
 	tempAvgSum = tempAvgSum + i.(int)
 }

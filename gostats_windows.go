@@ -7,10 +7,10 @@ import (
 )
 
 var (
-	modkernel32                = syscall.NewLazyDLL("kernel32.dll")
+	modkernel32 = syscall.NewLazyDLL("kernel32.dll")
 	//modpsapi                   = syscall.NewLazyDLL("psapi.dll")
-	procGetSystemTimes         = modkernel32.NewProc("GetSystemTimes")
-	procGlobalMemoryStatusEx   = modkernel32.NewProc("GlobalMemoryStatusEx")
+	procGetSystemTimes       = modkernel32.NewProc("GetSystemTimes")
+	procGlobalMemoryStatusEx = modkernel32.NewProc("GlobalMemoryStatusEx")
 )
 
 var lastIdleTime int64
@@ -21,54 +21,54 @@ func Cpu() int {
 	var idleTime int64
 	var kernelTime int64
 	var userTime int64
-	syscall.Syscall(procGetSystemTimes.Addr(),3,uintptr(unsafe.Pointer(&idleTime)),uintptr(unsafe.Pointer(&kernelTime)),uintptr(unsafe.Pointer(&userTime)))
-	
+	syscall.Syscall(procGetSystemTimes.Addr(), 3, uintptr(unsafe.Pointer(&idleTime)), uintptr(unsafe.Pointer(&kernelTime)), uintptr(unsafe.Pointer(&userTime)))
+
 	if lastIdleTime == 0 {
-		lastIdleTime   = idleTime
+		lastIdleTime = idleTime
 		lastKernelTime = kernelTime
-		lastUserTime   = userTime
+		lastUserTime = userTime
 		return 0
 	} else {
-		deltaIdleTime   := idleTime   - lastIdleTime
+		deltaIdleTime := idleTime - lastIdleTime
 		deltaKernelTime := kernelTime - lastKernelTime
-		deltaUserTime   := userTime   - lastUserTime
+		deltaUserTime := userTime - lastUserTime
 
-		lastIdleTime   = idleTime
+		lastIdleTime = idleTime
 		lastKernelTime = kernelTime
-		lastUserTime   = userTime
-		
-		return int(((deltaKernelTime+deltaUserTime-deltaIdleTime)*100)/(deltaKernelTime+deltaUserTime))
+		lastUserTime = userTime
+
+		return int(((deltaKernelTime + deltaUserTime - deltaIdleTime) * 100) / (deltaKernelTime + deltaUserTime))
 	}
 }
 
 type MEMORYSTATUSEX struct {
-	dwLength     uint32
-	dwMemoryLoad uint32
-	ullTotalPhys uint64
-	ullAvailPhys uint64
-	ullTotalPageFile uint64
-	ullAvailPageFile uint64
-	ullTotalVirtual uint64
-	ullAvailVirtual uint64
+	dwLength                uint32
+	dwMemoryLoad            uint32
+	ullTotalPhys            uint64
+	ullAvailPhys            uint64
+	ullTotalPageFile        uint64
+	ullAvailPageFile        uint64
+	ullTotalVirtual         uint64
+	ullAvailVirtual         uint64
 	ullAvailExtendedVirtual uint64
 }
 
 func MemoryPhysical() (int, uint64, uint64) {
 
 	var mex MEMORYSTATUSEX
-	mex.dwLength=64
-	
-	syscall.Syscall(procGlobalMemoryStatusEx.Addr(),1,uintptr(unsafe.Pointer(&mex)),0,0)
+	mex.dwLength = 64
 
-	return int((mex.ullTotalPhys-mex.ullAvailPhys)*100/mex.ullTotalPhys),(mex.ullTotalPhys-mex.ullAvailPhys),mex.ullTotalPhys
+	syscall.Syscall(procGlobalMemoryStatusEx.Addr(), 1, uintptr(unsafe.Pointer(&mex)), 0, 0)
+
+	return int((mex.ullTotalPhys - mex.ullAvailPhys) * 100 / mex.ullTotalPhys), (mex.ullTotalPhys - mex.ullAvailPhys), mex.ullTotalPhys
 }
 
 func MemoryVirtual() (int, uint64, uint64) {
 
 	var mex MEMORYSTATUSEX
-	mex.dwLength=64
-	
-	syscall.Syscall(procGlobalMemoryStatusEx.Addr(),1,uintptr(unsafe.Pointer(&mex)),0,0)
-	
-	return int((mex.ullTotalPageFile-mex.ullAvailPageFile)*100/mex.ullTotalPageFile),(mex.ullTotalPageFile-mex.ullAvailPageFile),mex.ullTotalPageFile
+	mex.dwLength = 64
+
+	syscall.Syscall(procGlobalMemoryStatusEx.Addr(), 1, uintptr(unsafe.Pointer(&mex)), 0, 0)
+
+	return int((mex.ullTotalPageFile - mex.ullAvailPageFile) * 100 / mex.ullTotalPageFile), (mex.ullTotalPageFile - mex.ullAvailPageFile), mex.ullTotalPageFile
 }

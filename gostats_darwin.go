@@ -1,7 +1,7 @@
 package gostats
 
 import (
-	//"github.com/bocajim/helpers/log"
+//"github.com/bocajim/helpers/log"
 )
 
 func Cpu() int {
@@ -9,9 +9,9 @@ func Cpu() int {
 }
 
 func MemoryPhysical() (int, uint64, uint64) {
-	return 0,0,0
+	return 0, 0, 0
 }
 
 func MemoryVirtual() (int, uint64, uint64) {
-	return 0,0,0
+	return 0, 0, 0
 }

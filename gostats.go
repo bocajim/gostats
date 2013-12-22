@@ -41,3 +41,14 @@ func ringAvg(i interface{}) {
 func CpuAverage() int {
 	return cpuAverage
 }
+
+func MemoryPhysicalUsage() int {
+	val,_,_ := MemoryPhysical()
+	return val
+}
+
+func MemoryVirtualUsage() int {
+	val,_,_ := MemoryVirtual()
+	return val
+}
+

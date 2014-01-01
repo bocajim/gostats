@@ -43,12 +43,11 @@ func CpuAverage() int {
 }
 
 func MemoryPhysicalUsage() int {
-	val,_,_ := MemoryPhysical()
+	val, _, _ := MemoryPhysical()
 	return val
 }
 
 func MemoryVirtualUsage() int {
-	val,_,_ := MemoryVirtual()
+	val, _, _ := MemoryVirtual()
 	return val
 }
-

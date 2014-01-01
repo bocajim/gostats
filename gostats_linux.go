@@ -52,12 +52,12 @@ func Cpu() int {
 				lastNiceTime = nice
 				lastSystemTime = system
 				lastIdleTime = idle
-				
+
 				total := deltaUserTime + deltaNiceTime + deltaSystemTime + deltaIdleTime
 				if total == 0 {
 					return 0
 				}
-				
+
 				return int(((deltaUserTime + deltaNiceTime + deltaSystemTime) * 100) / total)
 
 			}

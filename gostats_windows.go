@@ -36,7 +36,7 @@ func Cpu() int {
 		lastIdleTime = idleTime
 		lastKernelTime = kernelTime
 		lastUserTime = userTime
-		
+
 		total := deltaKernelTime + deltaUserTime
 		if total == 0 {
 			return 0

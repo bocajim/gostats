@@ -83,8 +83,6 @@ func interfaces(ifindex int) (map[string]Interface, error) {
 	for ; ai != nil; ai = ai.Next {
 		index := ai.Index
 		if ifindex == 0 || ifindex == int(index) {
-			var isUp bool
-			var isLoopback bool
 
 			row := syscall.MibIfRow{Index: index}
 			e := syscall.GetIfEntry(&row)
@@ -92,37 +90,10 @@ func interfaces(ifindex int) (map[string]Interface, error) {
 				return nil, os.NewSyscallError("GetIfEntry", e)
 			}
 
-			for _, ii := range ii {
-				ip := (*syscall.RawSockaddrInet4)(unsafe.Pointer(&ii.Address)).Addr
-				ipv4 := net.IPv4(ip[0], ip[1], ip[2], ip[3])
-				ipl := &ai.IpAddressList
-				for ipl != nil {
-					ips := bytePtrToString(&ipl.IpAddress.String[0])
-					if ipv4.Equal(net.ParseIP(ips)) {
-						break
-					}
-					ipl = ipl.Next
-				}
-				if ipl == nil {
-					continue
-				}
-				if ii.Flags&syscall.IFF_UP != 0 {
-					isUp = true
-				}
-				if ii.Flags&syscall.IFF_LOOPBACK != 0 {
-					isLoopback = true
-				}
-			}
-
 			name := bytePtrToString(&ai.Description[0])
 
 			ifi := Interface{
-				Index:        int(index),
-				MTU:          int(row.Mtu),
 				Name:         name,
-				HardwareAddr: net.HardwareAddr(row.PhysAddr[:row.PhysAddrLen]),
-				Online:       isUp,
-				Loopback:     isLoopback,
 				BytesIn:      int64(row.InOctets),
 				BytesOut:     int64(row.OutOctets),
 			}

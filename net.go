@@ -15,6 +15,8 @@ type Interface struct {
 	Loopback     bool
 	BytesIn      int64
 	BytesOut     int64
+	PacketsIn    int64
+	PacketsOut   int64
 }
 
 type Usage struct {

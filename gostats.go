@@ -18,6 +18,7 @@ func CalcAverages() {
 	}
 
 	go func() {
+		i := 0
 		for {
 			select {
 			case <-time.After(time.Second * 5):
@@ -27,6 +28,11 @@ func CalcAverages() {
 				tempAvgSum = 0
 				cpuRing.Do(ringAvg)
 				cpuAverage = tempAvgSum / 12
+				
+				if i%6==0 {
+					networkDiff()
+				}
+				i++
 			}
 		}
 	}()

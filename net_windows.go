@@ -2,7 +2,6 @@ package gostats
 
 import (
 	//"github.com/bocajim/helpers/log"
-	"net"
 	"os"
 	"syscall"
 	"unsafe"
@@ -74,11 +73,6 @@ func interfaces(ifindex int) (map[string]Interface, error) {
 		return nil, err
 	}
 
-	ii, err := getInterfaceList()
-	if err != nil {
-		return nil, err
-	}
-
 	ifm := make(map[string]Interface)
 	for ; ai != nil; ai = ai.Next {
 		index := ai.Index
@@ -96,6 +90,8 @@ func interfaces(ifindex int) (map[string]Interface, error) {
 				Name:         name,
 				BytesIn:      int64(row.InOctets),
 				BytesOut:     int64(row.OutOctets),
+				PacketsIn:    int64(row.InUcastPkts),
+				PacketsOut:   int64(row.OutUcastPkts),
 			}
 			ifm[ifi.Name] = ifi
 		}

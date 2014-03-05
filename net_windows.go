@@ -3,6 +3,7 @@ package gostats
 import (
 	//"github.com/bocajim/helpers/log"
 	"os"
+	"strings"
 	"syscall"
 	"unsafe"
 )
@@ -85,6 +86,10 @@ func interfaces(ifindex int) (map[string]Interface, error) {
 			}
 
 			name := bytePtrToString(&ai.Description[0])
+			name = strings.Replace(name,"(R)","",-1)
+			name = strings.Replace(name,".","_",-1)
+			name = strings.Replace(name,"  "," ",-1)
+			name = strings.Replace(name," ","_",-1)
 
 			ifi := Interface{
 				Name:         name,

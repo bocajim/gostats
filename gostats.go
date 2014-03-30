@@ -28,8 +28,8 @@ func CalcAverages() {
 				tempAvgSum = 0
 				cpuRing.Do(ringAvg)
 				cpuAverage = tempAvgSum / 12
-				
-				if i%6==0 {
+
+				if i%6 == 0 {
 					networkDiff()
 				}
 				i++

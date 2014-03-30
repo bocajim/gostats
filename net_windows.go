@@ -86,17 +86,17 @@ func interfaces(ifindex int) (map[string]Interface, error) {
 			}
 
 			name := bytePtrToString(&ai.Description[0])
-			name = strings.Replace(name,"(R)","",-1)
-			name = strings.Replace(name,".","_",-1)
-			name = strings.Replace(name,"  "," ",-1)
-			name = strings.Replace(name," ","_",-1)
+			name = strings.Replace(name, "(R)", "", -1)
+			name = strings.Replace(name, ".", "_", -1)
+			name = strings.Replace(name, "  ", " ", -1)
+			name = strings.Replace(name, " ", "_", -1)
 
 			ifi := Interface{
-				Name:         name,
-				BytesIn:      int64(row.InOctets),
-				BytesOut:     int64(row.OutOctets),
-				PacketsIn:    int64(row.InUcastPkts),
-				PacketsOut:   int64(row.OutUcastPkts),
+				Name:       name,
+				BytesIn:    int64(row.InOctets),
+				BytesOut:   int64(row.OutOctets),
+				PacketsIn:  int64(row.InUcastPkts),
+				PacketsOut: int64(row.OutUcastPkts),
 			}
 			ifm[ifi.Name] = ifi
 		}

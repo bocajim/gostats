@@ -67,7 +67,7 @@ func networkDiff() {
 		} else {
 			u.PacketsPerSecondOut = float64(v.PacketsOut-p.PacketsOut) / difft.Seconds()
 		}
-		
+
 		rm[k] = u
 	}
 	currentUsage = rm
